@@ -42,6 +42,9 @@ http {
     sendfile            off;
     {% endif %}
 
+    # Max size of the hashes used for matching server names, etc.
+    types_hash_max_size 2048;
+
     # Don't send out partial TCP frames
     tcp_nopush          on;
 
