@@ -17,7 +17,7 @@ wp-initial-download:
 
 # Loop through all of the sites defined in the local sites.sls pillar data
 # and configure MySQL, our directory structure, and Nginx for each.
-{% for site, site_args in pillar.get('wsuwp-indie-sites',{}).items() %}
+{% for site, site_args in pillar.get('foghlaim-sites',{}).items() %}
 
 {% if site_args['database'] is defined %}
 # Set defaults for database information so that it doesn't need to be set
