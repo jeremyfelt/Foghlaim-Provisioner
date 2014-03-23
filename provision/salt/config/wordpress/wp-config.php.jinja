@@ -28,6 +28,9 @@ define('LOGGED_IN_SALT',   'makethisuniqueonproduction');
 define('NONCE_SALT',       'makethisuniqueonproduction');
 {% endif %}
 
+define( 'WP_HOME',    'http://{{ site_data['nginx']['server_name'] }}' );
+define( 'WP_SITEURL', 'http://{{ site_data['nginx']['server_name'] }}' );
+
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'http://content.{{ site_data['nginx']['server_name'] }}' );
 
