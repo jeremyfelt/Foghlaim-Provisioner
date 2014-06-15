@@ -73,6 +73,11 @@ src-build-prereq:
     - require_in:
       - cmd: nginx
 
+# Ensure that openssl is at the latest revision.
+openssl:
+  pkg.latest:
+    - name: openssl
+
 # Ensure that postfix is at the latest revision.
 postfix:
   pkg.latest:
