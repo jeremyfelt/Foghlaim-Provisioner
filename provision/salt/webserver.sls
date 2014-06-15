@@ -84,6 +84,7 @@ php-fpm:
       - php-fpm
       - php-cli
       - php-common
+      - php-opcache
       - php-pear
       - php-pdo
       - php-mcrypt
