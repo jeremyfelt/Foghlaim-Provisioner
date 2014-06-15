@@ -1,6 +1,6 @@
-WSUWP Environment
+Foghlaim Provisioner
 
-Copyright 2013 by the contributors
+Copyright 2013-2014 by the contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,11 @@ permission notices:
 
   bootstrap-salt.sh is (c) 2012-2013 by the SaltStack Team
   bootstrap-salt.sh is released under the Apache 2.0 license
+
+  and
+
+  WSU Web Provisioner is (c) 2013-2014 by the contributors and licensed
+  as GPLv2 (or later) https://github.com/washingtonstateuniversity/WSU-Web-Provisioner
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -367,6 +372,6 @@ Public License instead of this License.
 WRITTEN OFFER
 
 The source code for any program binaries or compressed scripts that are
-included with WSUWP Environment can be freely obtained at the following URL:
+included with Foghlaim Provisioner can be freely obtained at the following URL:
 
-	http://github.com/washingtonstateuniversity/WSUWP-Environment
+	https://github.com/jeremyfelt/Foghlaim-Provisioner/
