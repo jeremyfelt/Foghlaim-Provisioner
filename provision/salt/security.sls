@@ -1,9 +1,6 @@
 iptables:
   pkg.installed:
     - name: iptables
-  service.running:
-    - watch:
-      - file: /etc/sysconfig/iptables
 
 /etc/sysconfig/iptables:
   file.managed:
