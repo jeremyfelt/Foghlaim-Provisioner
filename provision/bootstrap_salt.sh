@@ -438,7 +438,7 @@ if [ "${CALLER}x" = "${0}x" ]; then
 fi
 
 echoinfo "${CALLER} ${0} -- Version ${__ScriptVersion}"
-#echowarn "Running the unstable version of ${__ScriptName}"
+echowarn "Running the unstable version of ${__ScriptName}"
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
 #          NAME:  __exit_cleanup
@@ -1693,7 +1693,7 @@ install_ubuntu_deps() {
         __PIP_PACKAGES=""
     else
         check_pip_allowed "You need to allow pip based installations (-P) in order to install the python package 'requests'"
-        __apt_get_install_noinput python-pip
+        __apt_get_install_noinput python-setuptools python-pip
         __PIP_PACKAGES="requests"
         pip install requests
     fi
@@ -2495,7 +2495,7 @@ __install_epel_repository() {
     elif [ "$DISTRO_MAJOR_VERSION" -eq 6 ]; then
         rpm -Uvh --force "http://download.fedoraproject.org/pub/epel/6/${EPEL_ARCH}/epel-release-6-8.noarch.rpm" || return 1
     elif [ "$DISTRO_MAJOR_VERSION" -eq 7 ]; then
-        rpm -Uvh --force "http://download.fedoraproject.org/pub/epel/7/${EPEL_ARCH}/epel-release-7-1.noarch.rpm" || return 1
+        rpm -Uvh --force "http://download.fedoraproject.org/pub/epel/7/${EPEL_ARCH}/e/epel-release-7-1.noarch.rpm" || return 1
     else
         echoerror "Failed add EPEL repository support."
         return 1
