@@ -49,7 +49,7 @@ wp-initial-download:
 
 # Setup the MySQL users, databases, and privileges required for
 # each site.
-wsuwp-indie-db-{{ site }}:
+foghlaim-db-{{ site }}:
   mysql_user.present:
     - name: {{ site_args['db_user'] }}
     - password: {{ site_args['db_pass'] }}
@@ -83,7 +83,7 @@ site-dir-setup-{{ site_args['directory'] }}:
     - require:
       - cmd: nginx
     - require_in:
-      - cmd: wsuwp-indie-flush
+      - cmd: foghlaim-flush
 
 /etc/nginx/sites-enabled/{{ site_args['directory'] }}.conf:
   cmd.run:
@@ -109,7 +109,7 @@ wp-dir-setup-{{ site_args['directory'] }}:
       - cmd: nginx
       - cmd: site-dir-setup-{{ site_args['directory'] }}
     - require_in:
-      - cmd: wsuwp-indie-flush
+      - cmd: foghlaim-flush
 
 # If WordPress has not yet been setup, copy over the initial stable zip
 # and extract accordingly.
@@ -123,11 +123,11 @@ wp-initial-wordpress-{{ site_args['directory'] }}:
       - cmd: wp-initial-download
       - cmd: wp-dir-setup-{{ site_args['directory'] }}
     - require_in:
-      - cmd: wsuwp-indie-flush
+      - cmd: foghlaim-flush
 
 # Setup a wp-config.php file for the site and temporarily store it
-# in /var/wsuwp-config with other configs.
-/var/wsuwp-config/{{ site_args['directory'] }}-wp-config.php:
+# in /var/foghlaim-config with other configs.
+/var/foghlaim-config/{{ site_args['directory'] }}-wp-config.php:
   file.managed:
     - template: jinja
     - source:   salt://config/wordpress/wp-config.php.jinja
@@ -146,7 +146,7 @@ wp-initial-wordpress-{{ site_args['directory'] }}:
 # allows us to avoid some permissions issues in a local environment.
 wp-copy-config-{{ site_args['directory'] }}:
   cmd.run:
-    - name: cp /var/wsuwp-config/{{ site_args['directory'] }}-wp-config.php /var/www/{{ site_args['directory'] }}/wp-config.php
+    - name: cp /var/foghlaim-config/{{ site_args['directory'] }}-wp-config.php /var/www/{{ site_args['directory'] }}/wp-config.php
 {% endif %}
 
 # If we're in a remote environment, change all files in each site
@@ -170,7 +170,7 @@ wp-cli:
       - pkg: php-fpm
 
 # Flush the web services to ensure object and opcode cache are clear.
-wsuwp-indie-flush:
+foghlaim-flush:
   cmd.run:
     - name: sudo service memcached restart && sudo service nginx restart && sudo service php-fpm restart
     - require:
