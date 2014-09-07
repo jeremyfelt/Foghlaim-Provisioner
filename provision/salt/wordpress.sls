@@ -8,7 +8,7 @@
 # new sites that we configure.
 wp-initial-download:
   cmd.run:
-    - name: curl -o wordpress.zip -L http://wordpress.org/wordpress-3.9.1.zip
+    - name: curl -o wordpress.zip -L http://wordpress.org/wordpress-4.0.zip
     - cwd: /tmp/
     - user: root
     - unless: test -f /tmp/wordpress.zip
@@ -49,7 +49,7 @@ wp-initial-download:
 
 # Setup the MySQL users, databases, and privileges required for
 # each site.
-wsuwp-indie-db-{{ site }}:
+foghlaim-db-{{ site }}:
   mysql_user.present:
     - name: {{ site_args['db_user'] }}
     - password: {{ site_args['db_pass'] }}
@@ -83,7 +83,7 @@ site-dir-setup-{{ site_args['directory'] }}:
     - require:
       - cmd: nginx
     - require_in:
-      - cmd: wsuwp-indie-flush
+      - cmd: foghlaim-flush
 
 /etc/nginx/sites-enabled/{{ site_args['directory'] }}.conf:
   cmd.run:
@@ -109,7 +109,7 @@ wp-dir-setup-{{ site_args['directory'] }}:
       - cmd: nginx
       - cmd: site-dir-setup-{{ site_args['directory'] }}
     - require_in:
-      - cmd: wsuwp-indie-flush
+      - cmd: foghlaim-flush
 
 # If WordPress has not yet been setup, copy over the initial stable zip
 # and extract accordingly.
@@ -123,11 +123,11 @@ wp-initial-wordpress-{{ site_args['directory'] }}:
       - cmd: wp-initial-download
       - cmd: wp-dir-setup-{{ site_args['directory'] }}
     - require_in:
-      - cmd: wsuwp-indie-flush
+      - cmd: foghlaim-flush
 
 # Setup a wp-config.php file for the site and temporarily store it
-# in /var/wsuwp-config with other configs.
-/var/wsuwp-config/{{ site_args['directory'] }}-wp-config.php:
+# in /var/foghlaim-config with other configs.
+/var/foghlaim-config/{{ site_args['directory'] }}-wp-config.php:
   file.managed:
     - template: jinja
     - source:   salt://config/wordpress/wp-config.php.jinja
@@ -146,7 +146,7 @@ wp-initial-wordpress-{{ site_args['directory'] }}:
 # allows us to avoid some permissions issues in a local environment.
 wp-copy-config-{{ site_args['directory'] }}:
   cmd.run:
-    - name: cp /var/wsuwp-config/{{ site_args['directory'] }}-wp-config.php /var/www/{{ site_args['directory'] }}/wp-config.php
+    - name: cp /var/foghlaim-config/{{ site_args['directory'] }}-wp-config.php /var/www/{{ site_args['directory'] }}/wp-config.php
 {% endif %}
 
 # If we're in a remote environment, change all files in each site
@@ -163,14 +163,14 @@ wp-set-permissions-{{ site_args['directory'] }}:
 # Install wp-cli to provide a way to manage WordPress at the command line.
 wp-cli:
   cmd.run:
-    - name: curl -L https://github.com/wp-cli/wp-cli/releases/download/v0.15.1/wp-cli-0.15.1.phar > wp-cli.phar > wp-cli.phar && mv wp-cli.phar /usr/bin/wp && chmod +x /usr/bin/wp
+    - name: curl -L https://github.com/wp-cli/wp-cli/releases/download/v0.16.0/wp-cli.phar > wp-cli.phar > wp-cli.phar && mv wp-cli.phar /usr/bin/wp && chmod +x /usr/bin/wp
     - cwd: /tmp
-    - unless: wp --allow-root --version | grep "0.15.1"
+    - unless: wp --allow-root --version | grep "0.16.0"
     - require:
       - pkg: php-fpm
 
 # Flush the web services to ensure object and opcode cache are clear.
-wsuwp-indie-flush:
+foghlaim-flush:
   cmd.run:
     - name: sudo service memcached restart && sudo service nginx restart && sudo service php-fpm restart
     - require:
