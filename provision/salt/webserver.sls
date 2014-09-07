@@ -78,6 +78,12 @@ nginx-init:
       - cmd: nginx
       - file: /etc/init.d/nginx
 
+cyrus-sasl-lib:
+  pkg.latest:
+    - name: cyrus-sasl-lib
+    - require_in:
+      - pkg: php-fpm
+
 php-fpm:
   pkg.latest:
     - pkgs:
