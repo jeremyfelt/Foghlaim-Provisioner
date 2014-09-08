@@ -123,6 +123,7 @@ wp-initial-wordpress-{{ site_args['directory'] }}:
     - user:     www-data
     - group:    www-data
     - mode:     644
+    - makedirs: True
     - require:
       - cmd: nginx
       - cmd: site-dir-setup-{{ site_args['directory'] }}
