@@ -143,6 +143,7 @@ php-fpm-init:
     - user: root
     - group: root
     - mode: 644
+    - makedirs: True
     - require:
       - cmd: nginx
 
