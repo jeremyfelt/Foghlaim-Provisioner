@@ -108,8 +108,3 @@ telnet:
 bash:
   pkg.latest:
     - name: bash
-
-# Ensure the system's openssl package is at the latest version.
-openssl:
-  pkg.latest:
-    - name: openssl
