@@ -8,7 +8,7 @@
 # new sites that we configure.
 wp-initial-download:
   cmd.run:
-    - name: curl -o wordpress.zip -L http://wordpress.org/wordpress-4.0.zip
+    - name: curl -o wordpress.zip -L https://wordpress.org/latest.zip
     - cwd: /tmp/
     - user: root
     - unless: test -f /tmp/wordpress.zip
