@@ -73,6 +73,11 @@ src-build-prereq:
     - require_in:
       - cmd: nginx
 
+# Yum can provide a list of security updates
+yum-plugin-security:
+  pkg.latest:
+    - name: yum-plugin-security
+
 # Ensure that openssl is at the latest revision.
 openssl:
   pkg.latest:
