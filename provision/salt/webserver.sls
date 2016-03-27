@@ -30,15 +30,6 @@ user-www-deploy:
     - require_in:
       - cmd: nginx
 
-# Provide a cache directory for pagespeed
-/var/ngx_pagespeed_cache:
-  file.directory:
-    - user: www-data
-    - group: www-data
-    - mode: 755
-    - require_in:
-      - cmd: nginx
-
 # Manage a custom compile script for Nginx.
 /root/nginx-compile.sh:
   file.managed:
@@ -65,6 +56,7 @@ nginx:
     - cwd: /root/
     - unless: nginx -V &> nginx-version.txt && cat nginx-version.txt | grep -A 42 "nginx/1.9.12" | grep "OpenSSL_1_0_2g"
     - require:
+      - pkg: src-build-prereq
       - file: /root/nginx-compile.sh
       - user: www-data
       - group: www-data
@@ -78,53 +70,6 @@ nginx-init:
       - cmd: nginx
       - file: /etc/init.d/nginx
 
-cyrus-sasl-lib:
-  pkg.latest:
-    - name: cyrus-sasl-lib
-    - require_in:
-      - pkg: php-fpm
-
-php-fpm:
-  pkg.latest:
-    - pkgs:
-      - php-fpm
-      - php-cli
-      - php-common
-      - php-opcache
-      - php-pear
-      - php-pdo
-      - php-mcrypt
-      - php-mysqlnd
-      - php-imap
-      - php-pecl-memcached
-      - php-mbstring
-  service.running:
-    - require:
-      - pkg: php-fpm
-      - user: www-data
-      - group: www-data
-    - watch:
-      - file: /etc/php-fpm.d/www.conf
-      - file: /etc/php.ini
-      - file: /etc/php.d/opcache.ini
-
-ImageMagick:
-  pkg.latest:
-    - pkgs:
-      - php-pecl-imagick
-      - ImageMagick
-    - require:
-      - pkg: php-fpm
-
-# Set php-fpm to run in levels 2345.
-php-fpm-init:
-  cmd.run:
-    - name: chkconfig --level 2345 php-fpm on
-    - cwd: /
-    - require:
-      - pkg: php-fpm
-      - pkg: ImageMagick
-
 # Configure Nginx with a jinja template.
 /etc/nginx/nginx.conf:
   file.managed:
@@ -135,8 +80,16 @@ php-fpm-init:
     - mode:     644
     - require:
       - cmd:    nginx
-    - context:
-      network: {{ pillar['network'] }}
+
+/etc/nginx/sites-enabled/:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - cmd: nginx
+    - require_in:
+      - file: /etc/nginx/sites-enabled/default
 
 /etc/nginx/sites-enabled/default:
   file.managed:
@@ -144,63 +97,26 @@ php-fpm-init:
     - user: root
     - group: root
     - mode: 644
-    - makedirs: True
     - require:
       - cmd: nginx
 
-/etc/nginx/fastcgi_params:
+/etc/nginx/sites-enabled/status.conf:
   file.managed:
-    - source: salt://config/nginx/fastcgi_params
+    - source: salt://config/nginx/status.conf
     - user: root
     - group: root
     - mode: 644
     - require:
       - cmd: nginx
 
-/etc/php-fpm.conf:
+/etc/nginx/mime.types:
   file.managed:
-    - source: salt://config/php-fpm/php-fpm.conf
+    - source: salt://config/nginx/mime.types
     - user: root
     - group: root
     - mode: 644
     - require:
-      - pkg: php-fpm
-
-/etc/php-fpm.d/www.conf:
-  file.managed:
-    - source: salt://config/php-fpm/www.conf
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pkg: php-fpm
-
-/etc/php.d/opcache.ini:
-  file.managed:
-    - source: salt://config/php-fpm/opcache.ini
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pkg: php-fpm
-
-/etc/php.ini:
-  file.managed:
-    - source: salt://config/php-fpm/php.ini
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pkg: php-fpm
-
-# Start the php-fpm service
-php-fpm-service:
-  service.running:
-    - name: php-fpm
-    - require:
-      - file: /etc/php.ini
-      - file: /etc/php-fpm.d/www.conf
-      - cmd: php-fpm-init
+      - cmd: nginx
 
 # Start the nginx service.
 nginx-service:
@@ -209,33 +125,9 @@ nginx-service:
     - require:
       - cmd: nginx
       - cmd: nginx-init
-      - cmd: php-fpm-init
-      - service: php-fpm-service
       - file: /etc/init.d/nginx
       - user: www-data
       - group: www-data
     - watch:
       - file: /etc/nginx/nginx.conf
       - file: /etc/nginx/sites-enabled/*
-
-{% if pillar['network']['location'] == 'local' %}
-php-pecl-xdebug:
-  pkg.installed:
-    - pkgs:
-      - php-pecl-xdebug
-    - require:
-      - pkg: php-fpm
-
-# Configure xdebug with a jinja template
-/etc/php.d/xdebug.ini:
-  file.managed:
-    - template: jinja
-    - source: salt://config/php-fpm/xdebug.ini.jinja
-    - user: root
-    - group: root
-    - mode: 644
-    - require:
-      - pkg: php-pecl-xdebug
-    - context:
-      network: {{ pillar['network'] }}
-{% endif %}
