@@ -28,10 +28,11 @@ user-mysql:
 mysql:
   pkg.latest:
     - pkgs:
-      - mysql
-      - mysql-libs
-      - mysql-server
+      - mysql-community-libs
+      - mysql-community-server
       - MySQL-python
+    - require:
+      - pkgrepo: mysql-community-repo
 
 # Set MySQL to run in levels 2345.
 mysqld-init:
@@ -41,9 +42,11 @@ mysqld-init:
     - require:
       - pkg: mysql
 
+# Configure MySQL with a jinja template.
 /etc/my.cnf:
   file.managed:
-    - source: salt://config/mysql/my.cnf
+    - template: jinja
+    - source: salt://config/mysql/my.cnf.jinja
     - user: root
     - group: root
     - mode: 664
