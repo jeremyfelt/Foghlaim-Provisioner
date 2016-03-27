@@ -36,11 +36,7 @@ http {
     # Sendfile should be off in a VirtualBox (local) environment because
     # of caching issues with the shared drive. In production, it should
     # be turned on as it does improve performance.
-    {% if network['location'] == 'remote' %}
-    sendfile            on;
-    {% else %}
-    sendfile            off;
-    {% endif %}
+    sendfile on;
 
     # Some hash size settings required by Digital Ocean (apparently?)
     types_hash_bucket_size 64;
