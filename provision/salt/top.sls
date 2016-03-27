@@ -9,6 +9,7 @@ base:
     - server
     - security
     - webserver
+    - application-php
     - cacheserver
     - dbserver
     - wordpress
