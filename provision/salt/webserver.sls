@@ -81,6 +81,16 @@ nginx-init:
     - require:
       - cmd:    nginx
 
+# Provide a common *.php location block when needed.
+/etc/nginx/foghlaim-php-location-common.conf:
+  file.managed:
+    - source: salt://config/nginx/foghlaim-php-location-common.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - cmd: nginx
+
 # Provide a common HTTPS configuration for all sites.
 /etc/nginx/foghlaim-ssl-common.conf:
   file.managed:
