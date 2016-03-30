@@ -54,7 +54,7 @@ nginx:
   cmd.run:
     - name: sh nginx-compile.sh
     - cwd: /root/
-    - unless: nginx -V &> nginx-version.txt && cat nginx-version.txt | grep -A 42 "nginx/1.9.12" | grep "OpenSSL_1_0_2g"
+    - unless: nginx -V &> nginx-version.txt && cat nginx-version.txt | grep -A 42 "nginx/1.9.13" | grep "OpenSSL_1_0_2g"
     - require:
       - pkg: src-build-prereq
       - file: /root/nginx-compile.sh
@@ -80,6 +80,16 @@ nginx-init:
     - mode:     644
     - require:
       - cmd:    nginx
+
+# Provide a common *.php location block when needed.
+/etc/nginx/foghlaim-php-location-common.conf:
+  file.managed:
+    - source: salt://config/nginx/foghlaim-php-location-common.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - cmd: nginx
 
 # Provide a common HTTPS configuration for all sites.
 /etc/nginx/foghlaim-ssl-common.conf:
