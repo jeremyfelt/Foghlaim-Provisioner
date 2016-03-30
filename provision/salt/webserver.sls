@@ -81,6 +81,16 @@ nginx-init:
     - require:
       - cmd:    nginx
 
+# Provide a common HTTPS configuration for all sites.
+/etc/nginx/foghlaim-ssl-common.conf:
+  file.managed:
+    - source: salt://config/nginx/foghlaim-ssl-common.conf
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - cmd: nginx
+
 /etc/nginx/sites-enabled/:
   file.directory:
     - user: root
