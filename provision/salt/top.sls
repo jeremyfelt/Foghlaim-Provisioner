@@ -10,6 +10,7 @@ base:
     - security
     - webserver
     - application-php
+  'future':
     - cacheserver
     - dbserver
     - wordpress
