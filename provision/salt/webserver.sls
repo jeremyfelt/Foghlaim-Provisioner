@@ -138,6 +138,15 @@ nginx-init:
     - require:
       - cmd: nginx
 
+/var/www/index.html:
+  file.managed:
+    - source: salt://config/nginx/index.html
+    - user: www-data
+    - group: www-data
+    - mode: 644
+    - require:
+      - cmd: nginx
+
 # Start the nginx service.
 nginx-service:
   service.running:
