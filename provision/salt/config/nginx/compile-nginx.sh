@@ -1,22 +1,22 @@
 #!/bin/bash
 #
 # Compile Nginx with SPDY and Pagespeed support.
-rm -fr /tmp/nginx-1.9.13
-rm -fr /tmp/openssl-1.0.2g
+rm -fr /tmp/nginx-1.9.15
+rm -fr /tmp/openssl-1.0.2h
 
 # Compile against OpenSSL to enable NPN.
 cd /tmp/
-wget https://github.com/openssl/openssl/archive/OpenSSL_1_0_2g.tar.gz -O openssl-1.0.2g.tar.gz
-tar -xzvf openssl-1.0.2g.tar.gz
+wget https://github.com/openssl/openssl/archive/OpenSSL_1_0_2h.tar.gz -O openssl-1.0.2h.tar.gz
+tar -xzvf openssl-1.0.2h.tar.gz
 
 # Get the Nginx source.
 #
 # Best to get the latest mainline release. Of course, your mileage may
 # vary depending on future changes
 cd /tmp/
-wget http://nginx.org/download/nginx-1.9.13.tar.gz
-tar zxf nginx-1.9.13.tar.gz
-cd /tmp/nginx-1.9.13
+wget http://nginx.org/download/nginx-1.9.15.tar.gz
+tar zxf nginx-1.9.15.tar.gz
+cd /tmp/nginx-1.9.15
 
 ./configure \
 --user=www-data \
@@ -50,8 +50,8 @@ cd /tmp/nginx-1.9.13
 --with-ipv6 \
 --with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
---with-openssl=/tmp/openssl-OpenSSL_1_0_2g
+--with-openssl=/tmp/openssl-OpenSSL_1_0_2h
 
-cd /tmp/nginx-1.9.13
+cd /tmp/nginx-1.9.15
 make
 make install

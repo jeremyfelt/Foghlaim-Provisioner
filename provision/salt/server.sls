@@ -103,6 +103,7 @@ core-pkgs-latest:
       - bash
       - wget
       - curl
+      - ntp
       - yum
       - openssl
       - git
