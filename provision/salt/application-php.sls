@@ -24,7 +24,7 @@ php-fpm:
     - watch:
       - file: /etc/php-fpm.d/www.conf
       - file: /etc/php.ini
-      - file: /etc/php.d/opcache.ini
+      - file: /etc/php.d/10-opcache.ini
 
 ImageMagick:
   pkg.latest:
