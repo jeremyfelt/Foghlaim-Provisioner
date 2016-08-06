@@ -62,7 +62,7 @@ php-fpm-init:
     - require:
       - pkg: php-fpm
 
-/etc/php.d/opcache.ini:
+/etc/php.d/10-opcache.ini:
   file.managed:
     - source: salt://config/php-fpm/opcache.ini
     - user: root
